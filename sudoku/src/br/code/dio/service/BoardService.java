@@ -6,19 +6,11 @@ import br.code.dio.model.Board;
 import br.code.dio.model.GameStatusEnum;
 import br.code.dio.model.Space;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BoardService {
-
     private final static int BOARD_LIMIT = 9;
-
     private final Board board;
-
-    public BoardService(final Map<String, String> gameConfig) {
-        this.board = new Board(initBoard(gameConfig));
-    }
 
     public List<List<Space>> getSpaces(){
         return board.getSpaces();
@@ -40,19 +32,56 @@ public class BoardService {
         return board.gameIsFinished();
     }
 
-    private List<List<Space>> initBoard(final Map<String, String> gameConfig) {
-        List<List<Space>> spaces = new ArrayList<>();
+    public BoardService() {
+        this.board = new Board(initBoard());
+    }
+
+    private List<List<Space>> initBoard() {
+        List<List<Space>> board = new ArrayList<>();
         for (int i = 0; i < BOARD_LIMIT; i++) {
-            spaces.add(new ArrayList<>());
+            List<Space> row = new ArrayList<>();
             for (int j = 0; j < BOARD_LIMIT; j++) {
-                var positionConfig = gameConfig.get("%s,%s".formatted(i, j));
-                var expected = Integer.parseInt(positionConfig.split(",")[0]);
-                var fixed = Boolean.parseBoolean(positionConfig.split(",")[1]);
-                var currentSpace = new Space(expected, fixed);
-                spaces.get(i).add(currentSpace);
+                row.add(new Space(0, false)); // Inicializa os espaços sem números fixos
+            }
+            board.add(row);
+        }
+        generateValidBoard(board);
+        return board;
+    }
+
+    private void generateValidBoard(List<List<Space>> board) {
+        Random random = new Random();
+        for (int i = 0; i < BOARD_LIMIT; i++) {
+            for (int j = 0; j < BOARD_LIMIT; j++) {
+                if (random.nextDouble() < 0.4) { // Define uma densidade aleatória inicial
+                    int num;
+                    do {
+                        num = random.nextInt(9) + 1;
+                    } while (!isValid(board, i, j, num));
+                    board.get(i).set(j, new Space(num, true)); // Número fixo
+                }
             }
         }
+    }
 
-        return spaces;
+    private boolean isValid(List<List<Space>> board, int row, int col, int num) {
+        for (int i = 0; i < BOARD_LIMIT; i++) {
+            if (board.get(row).get(i).getActual() != null && board.get(row).get(i).getActual() == num) {
+                return false;
+            }
+            if (board.get(i).get(col).getActual() != null && board.get(i).get(col).getActual() == num) {
+                return false;
+            }
+        }
+        int boxRow = (row / 3) * 3;
+        int boxCol = (col / 3) * 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board.get(boxRow + i).get(boxCol + j).getActual() != null && board.get(boxRow + i).get(boxCol + j).getActual() == num) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
