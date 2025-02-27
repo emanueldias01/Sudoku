@@ -16,12 +16,10 @@ import static java.util.stream.Collectors.toMap;
 
 public class Main {
 
-
     private final static Scanner scanner = new Scanner(System.in);
-
     private static Board board;
-
     private final static int BOARD_LIMIT = 9;
+
     public static void main(String[] args) {
         final var positions = Stream.of(args)
                 .collect(toMap(
@@ -134,7 +132,7 @@ public class Main {
             return;
         }
 
-        System.out.printf("O jogo atualmente se encontra no status %s\n", board.getStatus());
+        System.out.printf("O jogo atualmente se encontra no status %s\n", board.getStatus().getLabel());
         if(board.hasErrors()){
             System.out.println("O jogo contém erros");
         } else {
@@ -175,7 +173,6 @@ public class Main {
         } else {
             System.out.println("Você ainda precisa preenhcer algum espaço");
         }
-
     }
 
     private static int runUntilGetValidNumber(final int min, final int max){
@@ -186,4 +183,5 @@ public class Main {
         }
         return current;
     }
+
 }
