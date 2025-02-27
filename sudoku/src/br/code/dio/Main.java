@@ -132,7 +132,7 @@ public class Main {
             return;
         }
 
-        System.out.printf("O jogo atualmente se encontra no status %s\n", board.getStatus().getLabel());
+        System.out.printf("O jogo atualmente se encontra no status %s\n", board.getStatus());
         if(board.hasErrors()){
             System.out.println("O jogo contém erros");
         } else {
