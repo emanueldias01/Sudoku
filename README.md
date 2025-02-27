@@ -14,6 +14,5 @@ Este projeto é uma implementação de um jogo de Sudoku em Java utilizando a bi
 
 Para rodar este projeto, você precisa ter o seguinte instalado:
 
-- Java JDK 8 ou superior.
+- Java JRE 17 ou superior.
 - Ferramenta para compilar e rodar arquivos JAR (como o terminal ou IDEs como IntelliJ IDEA ou Eclipse).
-
